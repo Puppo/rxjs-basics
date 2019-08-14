@@ -1,7 +1,7 @@
 import style from "./css/main.css";
 
 import { interval } from 'rxjs';
-import { scan, mapTo, filter, tap } from 'rxjs/operators';
+import { scan, mapTo, filter, tap, takeWhile } from 'rxjs/operators';
 
 // elms ref
 const countdown = document.getElementById('countdown');
@@ -12,10 +12,10 @@ const counter$ = interval(1000).pipe(
     mapTo(-1),
     scan((accumulator, current) => accumulator + current, 10),
     tap({
-        next: console.log,
-        complete: () => console.log('complete')
+        next: console.log
     }),
-    filter(value => value >= 0)
+    // filter(value => value >= 0) // --> stream not complete
+    takeWhile(value => value >= 0)
 );
 
 counter$.subscribe({
@@ -24,5 +24,6 @@ counter$.subscribe({
         if (!value) {
             message.innerHTML = 'Loftoff!'
         }
-    }
+    },
+    complete: () => console.log('complete')
 });
