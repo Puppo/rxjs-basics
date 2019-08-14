@@ -1,29 +1,43 @@
 import style from "./css/main.css";
 
-import { interval } from 'rxjs';
-import { scan, mapTo, filter, tap, takeWhile } from 'rxjs/operators';
+import { interval, fromEvent } from 'rxjs';
+import { scan, mapTo, filter, tap, takeWhile, takeUntil } from 'rxjs/operators';
 
 // elms ref
 const countdown = document.getElementById('countdown');
 const message = document.getElementById('message');
+const abort = document.getElementById('abort');
 
+const subscriber = (name) => {
+    return {
+        next: value => {
+            countdown.innerHTML = value;
+            if (!value) {
+                message.innerHTML = 'Loftoff!'
+            }
+        },
+        complete: () => console.log('complete', name)
+    }
+};
 
 const counter$ = interval(1000).pipe(
     mapTo(-1),
     scan((accumulator, current) => accumulator + current, 10),
-    tap({
-        next: console.log
-    }),
-    // filter(value => value >= 0) // --> stream not complete
+);
+
+const counterFilter$ = counter$.pipe(
+    filter(value => value >= 0) // --> stream not complete
+);
+
+const counterTakeWhile$ = counter$.pipe(
     takeWhile(value => value >= 0)
 );
 
-counter$.subscribe({
-    next: value => {
-        countdown.innerHTML = value;
-        if (!value) {
-            message.innerHTML = 'Loftoff!'
-        }
-    },
-    complete: () => console.log('complete')
-});
+const abort$ = fromEvent(abort, 'click');
+const counterTakeUntil$ = counter$.pipe(
+    takeUntil(abort$)
+);
+
+counterFilter$.subscribe(subscriber('counterFilter'));
+counterTakeWhile$.subscribe(subscriber('counterTakeWhile'));
+counterTakeUntil$.subscribe(subscriber('counterTakeUntil'));
