@@ -1,6 +1,10 @@
 /* */
 /* CREATE THIS FILE IN ./src/main.css */
 /* */
-body {
-    line-height: 2;
+.progress-bar {
+    position: fixed;
+    top: 0;
+    height: 4px;
+    width: 0%;
+    background-color: #ff16b7;
 }
