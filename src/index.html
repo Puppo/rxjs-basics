@@ -8,5 +8,38 @@
     <h1>
         Rxjs Basics
     </h1>
+
+    <h2>
+        Mortgage Calculator
+    </h2>
+
+    <div class="form-wrapper">
+        <label for="loanAmount">
+            Mortgage Amount ($)
+        </label>
+        <input type="number" id="loanAmount" name="loanAmount" />
+    </div>
+
+    <div class="form-wrapper">
+        <label for="interest">
+            Interest Rate (%)
+        </label>
+        <input type="number" id="interest" name="interest" />
+    </div>
+
+    <div class="form-wrapper">
+        <label for="loanLength">
+            Mortgage Length
+        </label>
+        <div>
+            <input type="radio" name="loanLength" class="loanLength" value="180" /> 15 yr
+            <input type="radio" name="loanLength" class="loanLength" value="360" /> 30 yr
+        </div>
+    </div>
+
+    <div>
+        Your expected monthly payment is: 
+        $<strong id="expected"></strong>
+    </div>
 </body>
 </html>
