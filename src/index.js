@@ -1,12 +1,14 @@
 import style from "./css/main.css";
 
 import { interval, fromEvent } from 'rxjs';
-import { scan, mapTo, filter, tap, takeWhile, takeUntil } from 'rxjs/operators';
+import { scan, mapTo, filter, tap, takeWhile, takeUntil, startWith } from 'rxjs/operators';
 
 // elms ref
 const countdown = document.getElementById('countdown');
 const message = document.getElementById('message');
 const abort = document.getElementById('abort');
+
+const COUNTDOWN_FROM = 10;
 
 const subscriber = (name) => {
     return {
@@ -22,7 +24,7 @@ const subscriber = (name) => {
 
 const counter$ = interval(1000).pipe(
     mapTo(-1),
-    scan((accumulator, current) => accumulator + current, 10),
+    scan((accumulator, current) => accumulator + current, COUNTDOWN_FROM),
 );
 
 const counterFilter$ = counter$.pipe(
@@ -35,7 +37,8 @@ const counterTakeWhile$ = counter$.pipe(
 
 const abort$ = fromEvent(abort, 'click');
 const counterTakeUntil$ = counter$.pipe(
-    takeUntil(abort$)
+    takeUntil(abort$),
+    startWith(COUNTDOWN_FROM)
 );
 
 counterFilter$.subscribe(subscriber('counterFilter'));
